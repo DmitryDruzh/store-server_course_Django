@@ -1,6 +1,7 @@
-from django.shortcuts import render, HttpResponseRedirect, redirect
+from django.shortcuts import render, HttpResponseRedirect
 from django.contrib import auth, messages
 from django.urls import reverse
+from django.contrib.auth.decorators import login_required
 
 from .forms import UserLoginForm, UserRegistrationForm, UserProfileForm
 from products.models import Basket
@@ -37,6 +38,7 @@ def register(request):
     return render(request, 'users/register.html', context)
 
 
+@login_required
 def profile(request):
     if request.method == 'POST':
         form = UserProfileForm(instance=request.user, data=request.POST, files=request.FILES)
@@ -45,9 +47,11 @@ def profile(request):
             form.save()
             return HttpResponseRedirect(reverse('profile'))
     else:
+        user_basket = Basket.objects.filter(user=request.user)
         form = UserProfileForm(instance=request.user)
     context = {'form': form,
-               'basket': Basket.objects.filter(user=request.user)}
+               'basket': user_basket,
+               }
     return render(request, 'users/profile.html', context)
 
 
