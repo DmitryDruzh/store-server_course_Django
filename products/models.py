@@ -2,6 +2,7 @@ from django.db import models
 
 from users.models import User
 
+
 # Create your models here.
 
 
@@ -11,6 +12,10 @@ class ProductsCategory(models.Model):
 
     def __str__(self):
         return self.name
+
+    class Meta:
+        verbose_name = 'category'
+        verbose_name_plural = 'categories'
 
 
 class Product(models.Model):
@@ -23,6 +28,10 @@ class Product(models.Model):
 
     def __str__(self):
         return f'{self.name} | Категория: {self.category.name}'
+
+    class Meta:
+        verbose_name = 'product'
+        verbose_name_plural = 'products'
 
 
 class BasketQuerySet(models.QuerySet):
