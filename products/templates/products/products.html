@@ -5,12 +5,12 @@
 
 
     {% block title %}
-    <title>Store - Каталог</title>
+    <title> {{ title }} </title>
     {% endblock %}
 
     <!-- Custom styles for this template -->
     {% block css %}
-    <link href="static/vendor/css/products.css" rel="stylesheet">
+    <link href="{% static 'vendor/css/products.css' %}" rel="stylesheet">
     {% endblock %}
 
 </head>
@@ -66,7 +66,7 @@
 
             <div class="row">
 
-                {% for product in products %}
+                {% for product in object_list %}
 
                 <div class="col-lg-4 col-md-6 mb-4">
                     <div class="card h-100">
@@ -94,23 +94,25 @@
 
             </div>
 
+            {% if is_paginated %}
             <nav aria-label="Page navigation example">
                 <ul class="pagination justify-content-center">
-                    {% if products.has_previous %}
+                    {% if page_obj.has_previous %}
                     <li class="page-item">
-                        <a class="page-link" href="{% url 'paginator' products.previous_page_number %}" tabindex="-1">Previous</a>
+                        <a class="page-link" href="{% url 'paginator' page_obj.previous_page_number %}" tabindex="-1">Previous</a>
                     </li>
                     {% endif %}
-                    {% for page in products.paginator.page_range %}
+                    {% for page in page_obj.paginator.page_range %}
                     <li class="page-item"><a class="page-link" href="{% url 'paginator' page %}">{{ page }}</a></li>
                     {% endfor %}
-                    {% if products.has_next %}
+                    {% if page_obj.has_next %}
                     <li class="page-item">
-                        <a class="page-link" href="{% url 'paginator' products.next_page_number %}">Next</a>
+                        <a class="page-link" href="{% url 'paginator' page_obj.next_page_number %}">Next</a>
                     </li>
                     {% endif %}
                 </ul>
             </nav>
+            {% endif %}
 
         </div>
 
