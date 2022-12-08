@@ -1,15 +1,15 @@
+from django.contrib import auth, messages
 from django.contrib.auth.views import LoginView
 from django.contrib.messages.views import SuccessMessageMixin
-from django.shortcuts import render, HttpResponseRedirect
-from django.contrib import auth, messages
+from django.shortcuts import HttpResponseRedirect, render
 from django.urls import reverse, reverse_lazy
-from django.views.generic import CreateView, UpdateView, TemplateView
+from django.views.generic import CreateView, TemplateView, UpdateView
 
 from common.views import TitleMixin
-from .forms import UserLoginForm, UserRegistrationForm, UserProfileForm
 from products.models import Basket
-from .models import User, EmailVerification
 
+from .forms import UserLoginForm, UserProfileForm, UserRegistrationForm
+from .models import EmailVerification, User
 
 # Create your views here.
 
@@ -83,10 +83,7 @@ class UserProfileView(TitleMixin, UpdateView):
     template_name = 'users/profile.html'
     title = 'Store | Личный кабинет'
 
-    def get_context_data(self, **kwargs):
-        context = super(UserProfileView, self).get_context_data()
-        context['basket'] = Basket.objects.filter(user=self.object)
-        return context
+
 
     def get_success_url(self):
         return reverse_lazy('profile', args=(self.object.id,))
