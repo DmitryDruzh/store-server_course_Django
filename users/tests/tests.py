@@ -3,11 +3,13 @@ from django.test import TestCase
 
 from datetime import timedelta
 from http import HTTPStatus
+from unittest.mock import patch
 
 from django.urls import reverse
 
 from django.utils.timezone import now
 from users.tasks import send_email_verification
+from store.celery import app
 
 from users.models import EmailVerification, User
 
@@ -48,15 +50,14 @@ class UserRegistrationViewTestCase(BaseTestCase):
         self.assertTrue(User.objects.filter(username=username).exists())
 
         # tests for email_verification
-        # user = User.objects.filter(username=username).last()
-        # task = send_email_verification.delay(user.id)
-        # result = task.get()
-        # email_verification = EmailVerification.objects.filter(user__username=username)
-        # self.assertTrue(email_verification.exists())
-        # self.assertEqual(
-        #     email_verification.first().expiration.date(),
-        #     (now() + timedelta(hours=48)).date()
-        # )
+        user = User.objects.filter(username=username).last()
+        send_email_verification(user.id)
+        email_verification = EmailVerification.objects.filter(user__username=username)
+        self.assertTrue(email_verification.exists())
+        self.assertEqual(
+            email_verification.first().expiration.date(),
+            (now() + timedelta(hours=48)).date()
+        )
 
     def test_user_registration_post_error(self):
         username = self.user['username']
