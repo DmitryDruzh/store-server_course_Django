@@ -1,5 +1,9 @@
 {% extends 'users/base.html' %}
 
+{% block title %}
+    <title> {{ title }} </title>
+{% endblock %}
+
 {% block content %}
 <div id="layoutAuthentication">
     <div id="layoutAuthentication_content">
@@ -15,6 +19,9 @@
                                 <h4>
                                     Ваш заказ успешно сформирован.
                                 </h4>
+                                <h8>
+                                    <a href="{% url 'index' %}">Вернуться на главную</a>
+                                </h8>
                             </div>
                         </div>
                     </div>
