@@ -1,17 +1,15 @@
 import os
-from django.test import TestCase
-
 from datetime import timedelta
 from http import HTTPStatus
 from unittest.mock import patch
 
+from django.test import TestCase
 from django.urls import reverse
-
 from django.utils.timezone import now
-from users.tasks import send_email_verification
-from store.celery import app
 
+from store.celery import app
 from users.models import EmailVerification, User
+from users.tasks import send_email_verification
 
 
 class BaseTestCase(TestCase):

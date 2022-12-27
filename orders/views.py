@@ -1,16 +1,16 @@
 from http import HTTPStatus
 
 import stripe
-
-from django.shortcuts import render
-from django.http import HttpResponseRedirect, HttpResponse
-from django.urls import reverse_lazy, reverse
-from django.views.decorators.csrf import csrf_exempt
-from django.views.generic import CreateView, TemplateView
 from django.conf import settings
+from django.http import HttpResponse, HttpResponseRedirect
+from django.shortcuts import render
+from django.urls import reverse, reverse_lazy
+from django.views.decorators.csrf import csrf_exempt
+from django.views.generic import CreateView, DetailView, ListView, TemplateView
 
 from common.views import TitleMixin
 from products.models import Basket
+
 from .forms import OrderForm
 from .models import Order
 
@@ -84,3 +84,26 @@ def fulfill_order(session):
     order_id = int(session.metadata.order_id)
     order = Order.objects.get(id=order_id)
     order.update_after_payment()
+
+
+class OrderListView(TitleMixin, ListView):
+    title = 'Store | Заказы'
+    template_name = 'orders/orders.html'
+    queryset = Order.objects.all()
+    context_object_name = 'orders'
+    ordering = ('id')
+
+    def get_queryset(self):
+        queryset = super(OrderListView, self).get_queryset()
+        return queryset.filter(initiator=self.request.user)
+
+
+class OrderDetailView(DetailView):
+    template_name = 'orders/order.html'
+    model = Order
+    context_object_name = 'order'
+
+    def get_context_data(self, **kwargs):
+        context = super(OrderDetailView, self).get_context_data(**kwargs)
+        context['title'] = f'Store | Заказ № {self.object.id}'
+        return context

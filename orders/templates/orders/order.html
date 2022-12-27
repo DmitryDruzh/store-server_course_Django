@@ -1,0 +1,43 @@
+{% extends 'products/base.html' %}
+{% load static humanize %}
+
+{% block title %}
+    <title>Store - Заказ №{{ order.id }}</title>
+{% endblock %}
+
+
+{% block content %}
+<!-- Page Content -->
+<section>
+    <div class="container pt-5">
+        <div class="text-center mt-5">
+            <h1>Заказ №{{ order.id }}</h1>
+            <div class="orders mt-5">
+                <table class="table">
+                    <thead>
+                    <tr>
+                        <th scope="col">Название</th>
+                        <th scope="col">Кол-во</th>
+                        <th scope="col">Цена</th>
+                        <th scope="col">Сумма</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    {% for item in order.basket_history.purchased_products %}
+                    <tr>
+                        <th scope="row">
+                            {{ item.product_name }}
+                        </th>
+                        <td>{{ item.quantity }}</td>
+                        <td>{{ item.price|intcomma }} руб.</td>
+                        <td>{{ item.total_price|intcomma }} руб.</td>
+                    </tr>
+                    {% endfor %}
+                    </tbody>
+                </table>
+                <p class="float-right h4 mt-3">Итого {{ order.basket_history.total_price }} руб.</p>
+            </div>
+        </div>
+    </div>
+</section>
+{% endblock %}

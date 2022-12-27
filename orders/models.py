@@ -1,7 +1,7 @@
 from django.db import models
 
-from users.models import User
 from products.models import Basket
+from users.models import User
 
 # Create your models here.
 
@@ -37,7 +37,7 @@ class Order(models.Model):
         basket = Basket.objects.filter(user=self.initiator)
         self.status = self.PAID
         self.basket_history = {
-            'purvhased_products': [item.de_json() for item in basket],
+            'purchased_products': [item.de_json() for item in basket],
             'total_price': float(basket.total_price())
         }
         basket.delete()

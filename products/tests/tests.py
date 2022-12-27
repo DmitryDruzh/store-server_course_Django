@@ -1,11 +1,12 @@
 from http import HTTPStatus
-from django.test import TestCase
 
+from django.test import TestCase
 from django.urls import reverse
+
+from products.models import Product, ProductsCategory
 
 # Create your tests here.
 
-from products.models import Product, ProductsCategory
 
 
 class IndexViewTestCase(TestCase):
